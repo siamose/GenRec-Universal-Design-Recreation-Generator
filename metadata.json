@@ -1,0 +1,5 @@
+{
+  "name": "GenRec: Universal Design Recreation Generator",
+  "description": "An accessible web application for generating difficulty-adjusted coloring pages, sudoku puzzles, and math worksheets for elderly people and children using Gemini AI.",
+  "requestFramePermissions": []
+}
