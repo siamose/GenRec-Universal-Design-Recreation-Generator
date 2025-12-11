@@ -54,12 +54,16 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ state }) => {
     window.print();
   };
 
+  // Shared container class for strict A4 printing
+  // Using 296mm height to provide a tiny safety buffer against overflow
+  const pageContainerClass = "bg-white w-[210mm] h-[296mm] mx-auto p-12 shadow-sm mb-8 overflow-hidden relative page-break print:w-[210mm] print:h-[296mm] print:p-12 print:m-0 print:mb-0 print:shadow-none";
+
   // Helper to render coloring page
   const renderColoringPage = (imgUrl: string | null, index: number, isAnswer: boolean) => {
     if (!imgUrl) return null;
     
     return (
-      <div key={`${isAnswer ? 'ans' : 'prob'}-${index}`} className="bg-white w-full max-w-[210mm] min-h-[297mm] mx-auto p-12 shadow-sm page-break print:shadow-none print:w-full print:max-w-none">
+      <div key={`${isAnswer ? 'ans' : 'prob'}-${index}`} className={pageContainerClass}>
         <PageHeader type={isAnswer ? "Answer Key" : undefined} />
         <div className="flex flex-col items-center justify-center h-[80%] border-2 border-dashed border-slate-200 rounded-xl overflow-hidden p-4">
            <img src={imgUrl} alt={isAnswer ? "Answer Key" : "Coloring Page"} className="max-h-full max-w-full object-contain" />
@@ -74,7 +78,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ state }) => {
     if (!problems) return null;
     
     return (
-      <div key={`${isAnswer ? 'ans' : 'prob'}-${index}`} className="bg-white w-full max-w-[210mm] min-h-[297mm] mx-auto p-12 shadow-sm page-break print:shadow-none print:w-full print:max-w-none">
+      <div key={`${isAnswer ? 'ans' : 'prob'}-${index}`} className={pageContainerClass}>
         <PageHeader type={isAnswer ? "Answer Key" : undefined} />
         <h2 className="text-2xl font-bold text-center text-slate-800 mb-8 uppercase tracking-widest">
           {isAnswer ? "Math Solutions" : "Math Worksheet"}
@@ -99,7 +103,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ state }) => {
     if (!board) return null;
 
     return (
-      <div key={`${isAnswer ? 'ans' : 'prob'}-${index}`} className="bg-white w-full max-w-[210mm] min-h-[297mm] mx-auto p-12 shadow-sm page-break print:shadow-none print:w-full print:max-w-none flex flex-col">
+      <div key={`${isAnswer ? 'ans' : 'prob'}-${index}`} className={`${pageContainerClass} flex flex-col`}>
         <PageHeader type={isAnswer ? "Answer Key" : undefined} />
         <h2 className="text-2xl font-bold text-center text-slate-800 mb-8 uppercase tracking-widest">
           {isAnswer ? "Sudoku Solution" : "Sudoku Challenge"}
@@ -137,7 +141,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ state }) => {
   };
 
   return (
-    <div className="lg:pl-96 bg-slate-100 min-h-screen pb-20">
+    <div className="lg:pl-96 bg-slate-100 min-h-screen pb-20 print:p-0 print:m-0 print:bg-white print:h-auto">
       {/* Floating Action Button for Print */}
       <div className="fixed bottom-8 right-8 z-50 no-print">
         <button 
@@ -149,7 +153,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ state }) => {
         </button>
       </div>
 
-      <div className="p-8 space-y-8">
+      <div className="p-8 space-y-8 print:p-0 print:space-y-0">
         {/* Render Problems */}
         {generatedContent.pages.map((page, idx) => {
           if (generatedContent.type === ContentType.COLORING) return renderColoringPage(page.problem as string, idx, false);
@@ -158,9 +162,9 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ state }) => {
           return null;
         })}
 
-        {/* Separator for Answers (only if enabled) */}
+        {/* Separator for Answers (only if enabled) - Hidden in print */}
         {generatedContent.includeAnswers && (
-          <div className="flex items-center justify-center py-8 page-break-before-always">
+          <div className="flex items-center justify-center py-8 print:hidden">
             <div className="h-px bg-slate-300 w-1/3"></div>
             <span className="mx-4 text-slate-400 font-bold uppercase tracking-widest text-sm">Answer Keys</span>
             <div className="h-px bg-slate-300 w-1/3"></div>
